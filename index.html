@@ -79,7 +79,7 @@ html, body {
 
 .orc-resumo-stats {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-bottom: 18px;
 }
@@ -118,7 +118,7 @@ html, body {
 
 .orc-resumo-panels {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 14px;
   margin-bottom: 14px;
 }
@@ -129,6 +129,13 @@ html, body {
   border-radius: 12px;
   padding: 16px;
 }
+.orc-resumo-panel--full { grid-column: 1 / -1; }
+.orc-ledger-category { border-top: 1px solid var(--rule); padding: 18px 0; }
+.orc-ledger-category:first-of-type { border-top: 0; padding-top: 0; }
+.orc-ledger-category-title { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+.orc-ledger-form { display: grid; grid-template-columns: 130px minmax(0, 1fr) 100px auto; gap: 8px; margin-bottom: 10px; }
+.orc-ledger-row { display: grid; grid-template-columns: 130px minmax(0, 1fr) 100px 30px; gap: 8px; align-items: center; }
+@media (max-width: 640px) { .orc-ledger-form, .orc-ledger-row { grid-template-columns: 1fr 82px 30px; } .orc-ledger-form input[type="date"], .orc-ledger-row input[type="date"] { grid-column: 1 / -1; } }
 
 .orc-resumo-panel-title {
   font-family: 'Inter', sans-serif;
@@ -231,7 +238,7 @@ html, body {
 .orc-resumo-tx-amount.pos { color: #2F8F5B; }
 
 @media (max-width: 640px) {
-  .orc-resumo-stats { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .orc-resumo-stats { grid-template-columns: 1fr 1fr; gap: 8px; }
   .orc-resumo-stat { padding: 10px; }
   .orc-resumo-stat-value { font-size: 18px; }
   .orc-resumo-panels { grid-template-columns: 1fr; }
@@ -1717,7 +1724,7 @@ html[data-orc-theme="dark"] input,html[data-orc-theme="dark"] select,html[data-o
     <div class="orc-head-meta">
       <div class="orc-month-row">
         <button id="orcPrev">‹</button>
-        <span id="orcMonthLabel">Julho 2026</span>
+        <span id="orcMonthLabel"></span>
         <button id="orcNext">›</button>
       </div>
       <div class="orc-updated" id="orcUpdatedAt"></div>
@@ -1736,57 +1743,35 @@ html[data-orc-theme="dark"] input,html[data-orc-theme="dark"] select,html[data-o
 
     <div class="orc-resumo-stats">
       <div class="orc-resumo-stat">
-        <div class="orc-resumo-stat-label">RENDIMENTO</div>
+        <div class="orc-resumo-stat-label">RECEBIDO</div>
         <div class="orc-resumo-stat-value" id="orcResumoIncome">—</div>
-        <div class="orc-resumo-stat-delta" id="orcResumoIncomeDelta"></div>
+        <div class="orc-resumo-stat-delta" id="orcResumoIncomeDelta">rendimentos recebidos</div>
       </div>
       <div class="orc-resumo-stat">
-        <div class="orc-resumo-stat-label">GASTO</div>
+        <div class="orc-resumo-stat-label">DESPESAS</div>
         <div class="orc-resumo-stat-value" id="orcResumoExpenses">—</div>
-        <div class="orc-resumo-stat-delta" id="orcResumoExpensesDelta"></div>
-      </div>
-      <div class="orc-resumo-stat">
-        <div class="orc-resumo-stat-label">POUPADO</div>
-        <div class="orc-resumo-stat-value" id="orcResumoSaved">—</div>
-        <div class="orc-resumo-stat-delta" id="orcResumoSavedDelta"></div>
+        <div class="orc-resumo-stat-delta" id="orcResumoExpensesDelta">total do mês</div>
       </div>
     </div>
 
     <div class="orc-resumo-panels">
       <div class="orc-resumo-panel">
+        <div class="orc-resumo-panel-title" id="orcResumoP1Title">CONTAS</div>
+        <div id="orcResumoP1Accounts"></div>
+      </div>
+      <div class="orc-resumo-panel">
+        <div class="orc-resumo-panel-title" id="orcResumoP2Title">CONTAS</div>
+        <div id="orcResumoP2Accounts"></div>
+      </div>
+      <div class="orc-resumo-panel orc-resumo-panel--full">
         <div class="orc-resumo-panel-title">DESPESAS POR CATEGORIA</div>
-        <div id="orcResumoCatRows"></div>
+        <div id="orcResumoExpenseCategories"></div>
       </div>
-      <div class="orc-resumo-panel orc-resumo-goal-panel">
-        <div class="orc-resumo-panel-title">META DE POUPANÇA</div>
-        <div class="orc-resumo-goal-wrap">
-          <svg width="118" height="118" viewBox="0 0 118 118">
-            <circle cx="59" cy="59" r="49" fill="none" stroke="#EFE6D8" stroke-width="10"/>
-            <circle cx="59" cy="59" r="49" fill="none" stroke="#D97757" stroke-width="10"
-              id="orcResumoGoalArc" stroke-linecap="round" transform="rotate(-90 59 59)"/>
-          </svg>
-          <div class="orc-resumo-goal-center">
-            <div class="orc-resumo-goal-pct" id="orcResumoGoalPct">0%</div>
-            <div class="orc-resumo-goal-of">de</div>
-            <input class="orc-resumo-goal-input" id="orcResumoGoalInput" type="number" value="20000" />
-          </div>
-        </div>
-        <div class="orc-resumo-goal-caption" id="orcResumoGoalCaption"></div>
+      <div class="orc-resumo-panel orc-resumo-panel--full">
+        <div class="orc-resumo-panel-title">DISTRIBUIÇÃO DOS RENDIMENTOS RECEBIDOS</div>
+        <div id="orcResumoIncomeAllocations"></div>
       </div>
     </div>
-
-    <div class="orc-resumo-panel">
-      <div class="orc-resumo-panel-title">PRINCIPAIS MOVIMENTOS DO MÊS</div>
-      <div id="orcResumoTxRows"></div>
-    </div>
-  </div>
-
-  <div class="orc-bc-wrap">
-    <div class="orc-accounts-title">Orçamento vs. gasto</div>
-    <div class="orc-hist-note" id="orcBcNote"></div>
-    <div class="orc-bc-alerts" id="orcBcAlerts"></div>
-    <div id="orcBcRows"></div>
-    <div class="orc-bc-total" id="orcBcTotal"></div>
   </div>
 
   <div class="orc-hist-wrap">
@@ -1797,7 +1782,14 @@ html[data-orc-theme="dark"] input,html[data-orc-theme="dark"] select,html[data-o
 
   </section>
 
-  <section class="orc-page" data-page="despesas">
+  <section class="orc-page" data-page="despesas" id="ledPage">
+  <div class="orc-accounts-wrap">
+    <div class="orc-accounts-title">Despesas do mês</div>
+    <div class="orc-hist-note" style="margin-bottom:16px">Adiciona a descrição, o valor e a data em cada categoria.</div>
+    <div id="ledCategories"></div>
+    <div class="orc-accounts-total" id="ledTotal"></div>
+  </div>
+  <div id="orcLegacyDesp" hidden>
   <div class="orc-compare-toggle" id="orcCompareToggle">
     <button data-mode="lastyear">vs ano anterior</button>
     <button data-mode="budget">vs orçamento</button>
@@ -1853,14 +1845,14 @@ html[data-orc-theme="dark"] input,html[data-orc-theme="dark"] select,html[data-o
     <button class="orc-add-row" id="orcAddCat">+ Adicionar</button>
   </div>
 
-  </section>
+  </div></section>
 
   <section class="orc-page" data-page="rendimentos" id="orcPageRendimentos">
     <div class="orc-cl-wrap">
       <div class="orc-accounts-title">Rendimentos</div>
-      <div class="orc-hist-note">Seleciona o dia em que recebeste ou vais receber. Regista salários, prémios, reembolsos e outros recebimentos. Os valores deste mês entram automaticamente no Resumo e nas Despesas.</div>
+      <div class="orc-hist-note" id="orcIncomePeriodNote">Regista a data em que o dinheiro entrou. Este rendimento fica associado ao período financeiro seguinte.</div>
       <div class="orc-cal">
-        <div class="orc-cal-title"><span id="orcIncomeCalTitle"></span><small>seleciona o dia</small></div>
+        <div class="orc-cal-title"><span id="orcIncomeCalTitle"></span><small id="orcIncomeCalHint">data em que recebeste</small></div>
         <div class="orc-cal-head"><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div><div>Dom</div></div>
         <div class="orc-cal-grid" id="orcIncomeCalGrid"></div>
         <div class="orc-cal-legend"><span><i class="dot paid"></i> recebimento registado</span></div>
@@ -1868,7 +1860,7 @@ html[data-orc-theme="dark"] input,html[data-orc-theme="dark"] select,html[data-o
       <div class="orc-cl-card" style="margin-bottom:16px">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;align-items:end">
           <label>Data<input class="orc-cl-input" type="date" id="orcIncomeDate"></label>
-          <label>Quem recebeu<input class="orc-cl-input" id="orcIncomePerson" placeholder="David, Rute…" maxlength="70"></label>
+          <label>Quem recebeu<input class="orc-cl-input" id="orcIncomePerson" placeholder="Nome" maxlength="70"></label>
           <label>Tipo<select class="orc-cl-input" id="orcIncomeType"><option>Salário</option><option>Subsídio de Refeição / Cartão Refeição</option><option>Prémio</option><option>Reembolso</option><option>Rendimento extra</option><option>Outro</option></select></label>
           <label>Valor (€)<input class="orc-cl-input" id="orcIncomeAmount" type="number" min="0.01" step="0.01" placeholder="0,00"></label>
           <label>Estado<select class="orc-cl-input" id="orcIncomeReceived"><option value="true">Recebido</option><option value="false">Pendente</option></select></label>
@@ -1876,10 +1868,25 @@ html[data-orc-theme="dark"] input,html[data-orc-theme="dark"] select,html[data-o
         <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><button class="orc-jump" type="button" id="orcIncomeAdd">+ Adicionar</button><button class="orc-jump" type="button" id="orcIncomeCancelEdit" hidden>Cancelar edição</button></div>
       </div>
       <div class="orc-cl-summary" id="orcIncomeSummary"></div>
+      <div class="orc-hist-note" style="margin:4px 0 12px">Depois de registares um rendimento, distribui-o pelos destinos pretendidos. A distribuição é um plano e não altera automaticamente o saldo das contas.</div>
       <div id="orcIncomeList"></div>
     </div>
   </section>
 
+
+  <section class="orc-page" data-page="casa-santa-marta">
+    <div class="orc-accounts-title">Casa Santa Marta</div>
+    <p class="orc-hist-note">Dados da compra e acompanhamento mensal da diferença entre a renda recebida e os custos da casa.</p>
+    <div class="orc-cl-card"><div class="orc-cl-summary" id="houseDetails"></div><button type="button" class="orc-jump" id="houseAddDetail">+ Adicionar dado</button></div>
+    <div class="orc-accounts-wrap" style="margin-top:16px;overflow:auto"><div class="orc-table-wrap"><div class="orc-row orc-header-row" style="min-width:650px"><div>Mês</div><div>Renda</div><div>Prestação</div><div>Seguros</div><div>Diferença</div><div></div></div><div id="houseRows" style="min-width:650px"></div></div><button type="button" class="orc-add-row" id="houseAddRow">+ Adicionar mês</button><div class="orc-accounts-total" id="houseDifferenceTotal"></div></div>
+  </section>
+
+  <section class="orc-page" data-page="casamento">
+    <div class="orc-accounts-title">Casamento</div>
+    <p class="orc-hist-note">Acompanha cada fornecedor, o valor combinado, o que já foi pago e o que falta pagar.</p>
+    <div class="orc-cl-summary" id="weddingSummary"></div>
+    <div class="orc-accounts-wrap" style="margin-top:16px;overflow:auto"><div class="orc-table-wrap"><div class="orc-row orc-header-row" style="min-width:700px"><div>Descrição / fornecedor</div><div>Total</div><div>Pago</div><div>Por pagar</div><div>Estado</div><div></div></div><div id="weddingRows" style="min-width:700px"></div></div><button type="button" class="orc-add-row" id="weddingAddRow">+ Adicionar despesa</button></div>
+  </section>
 
   <section class="orc-page" data-page="planeamento" id="orcPagePlaneamento">
     <div class="orc-accounts-title" style="font-size:22px">Planeamento</div>
@@ -1904,10 +1911,10 @@ html[data-orc-theme="dark"] input,html[data-orc-theme="dark"] select,html[data-o
     </div>
   </section>
 
-  <section class="orc-page" data-page="atividades" id="orcPageAtividades">
+  <section class="orc-page" data-page="atividades" id="orcPageAtividades" hidden aria-hidden="true">
     <div class="orc-cl-wrap">
       <div class="orc-accounts-title">Atividades</div>
-      <div class="orc-hist-note">Seleciona David, Rute ou Teresa. Adiciona as atividades de cada pessoa, escolhe uma atividade pela sua cor e marca ou desmarca os dias diretamente no mapa mensal. Cada atividade tem o seu valor e estado de pagamento. O total do mês entra em Despesas → Outras Despesas → Atividades. Para mudar de mês usa as setas do calendário ou do topo.</div>
+      <div class="orc-hist-note">Seleciona a pessoa. Adiciona as atividades de cada pessoa, escolhe uma atividade pela sua cor e marca ou desmarca os dias diretamente no mapa mensal. Cada atividade tem o seu valor e estado de pagamento. O total do mês entra em Despesas → Outras Despesas → Atividades. Para mudar de mês usa as setas do calendário ou do topo.</div>
 
       <div class="orc-act-person-tabs" id="orcActPersonTabs"></div>
       <div class="orc-person-controls"><input id="orcPersonNew" class="orc-cl-input" type="text" placeholder="Nome da pessoa" maxlength="60" aria-label="Nome da nova pessoa"><button id="orcPersonAdd" type="button" class="orc-jump">+ Adicionar</button><button type="button" id="orcPersonRemove" class="orc-jump orc-remove-person">Remover</button></div>
@@ -1927,28 +1934,37 @@ html[data-orc-theme="dark"] input,html[data-orc-theme="dark"] select,html[data-o
 
   <section class="orc-page" data-page="contas">
   <div class="orc-accounts-wrap">
-    <div class="orc-accounts-title">Contas</div>
-    <div id="orcAccountsRows"></div>
+    <input class="orc-accounts-title" id="orcPerson1" value="Pessoa 1" style="background:transparent;border:0;color:inherit;font:inherit;width:100%">
+    <div id="orcAccP1"></div>
     <button class="orc-add-row" id="orcAddAccount">+ Adicionar</button>
   </div>
-
+  <div class="orc-accounts-wrap" style="margin-top:14px">
+    <input class="orc-accounts-title" id="orcPerson2" value="Pessoa 2" style="background:transparent;border:0;color:inherit;font:inherit;width:100%">
+    <div id="orcAccP2"></div>
+    <button class="orc-add-row" id="orcAddAccount2">+ Adicionar</button>
+  </div>
+  <div class="orc-accounts-total" id="orcAccCouple" style="margin-top:12px"></div>
   </section>
+
 
   <section class="orc-page" data-page="investimentos">
   <div class="orc-invest-wrap">
     <div class="orc-invest-header">
       <div class="orc-accounts-title">Investimentos</div>
-      <div class="orc-fx-row">
+      <div class="orc-fx-row" hidden>
         <span>câmbio USD→EUR</span>
         <input class="orc-fx-input" id="orcFxRate" type="number" step="0.000001" value="0.874" title="Taxa USD para EUR; pode ser ajustada manualmente" /><button type="button" id="orcFxRefresh" class="orc-jump" title="Atualizar câmbio">↻</button><span id="orcFxStatus" style="font-size:10px"></span>
       </div>
     </div>
-    <div class="orc-market-tools">
+    <div class="orc-hist-note" id="orcMonthlyInvestNote">Regista o reforço feito neste período e o valor total atual de cada investimento.</div>
+    <div class="ff-trade-grid" id="orcMonthlyInvestments" style="margin-top:14px"></div>
+    <div class="orc-hist-note" style="margin-top:12px">Ao abrir um novo período, o último valor registado transita automaticamente como referência. Atualiza apenas o reforço e o valor atual.</div>
+    <div class="orc-market-tools" hidden>
       <label>Chave API Twelve Data <input id="orcMarketKey" type="password" placeholder="Introduzir chave pessoal" autocomplete="off"></label>
       <button id="orcMarketRefresh" type="button">Atualizar cotações</button>
       <span id="orcMarketStatus" aria-live="polite">Cotações manuais até configurar a API.</span>
     </div>
-    <details class="ff-invest-section" id="ffStocksPanel" open>
+    <details class="ff-invest-section" id="ffStocksPanel" hidden>
       <summary><strong>Ações e ETFs</strong><span id="ffStocksHeadline">Resumo da carteira</span></summary>
       <div class="ff-invest-inner">
         <div class="orc-invest-table-head"><div>Ativo</div><div>Qtd.</div><div>Preço médio</div><div>Preço atual</div><div>Valor atual</div><div>Ganho / Perda</div><div></div></div>
@@ -1957,17 +1973,17 @@ html[data-orc-theme="dark"] input,html[data-orc-theme="dark"] select,html[data-o
         <button class="orc-add-row" id="orcAddInvest">+ Adicionar</button>
       </div>
     </details>
-    <details class="ff-invest-section" id="ffTradePanel">
-      <summary><strong>Trade Republic</strong><span id="ffTradeHeadline">Família e Teresa</span></summary>
+    <details class="ff-invest-section" id="ffTradePanel" hidden>
+      <summary><strong>Trade Republic</strong><span id="ffTradeHeadline">Família e pessoa 2</span></summary>
       <div class="ff-invest-inner">
         <div class="ff-trade-grid">
           <div class="ff-trade-card"><h3>Trade Família</h3><div class="orc-finance-fields"><label>Saldo remunerado (€)<input id="orcTradeBalance" type="number" min="0" step="0.01"></label><label>TANB anual (%)<input id="orcTradeRate" type="number" min="0" step="0.01"></label></div><div id="orcTradeInterest"></div></div>
-          <div class="ff-trade-card"><h3>Trade Teresa</h3><div class="orc-finance-fields"><label>Saldo remunerado (€)<input id="orcTradeTeresaBalance" type="number" min="0" step="0.01"></label><label>TANB anual (%)<input id="orcTradeTeresaRate" type="number" min="0" step="0.01"></label></div><div id="orcTradeTeresaInterest"></div></div>
+          <div class="ff-trade-card"><h3>Trade pessoa 2</h3><div class="orc-finance-fields"><label>Saldo remunerado (€)<input id="orcTradeTeresaBalance" type="number" min="0" step="0.01"></label><label>TANB anual (%)<input id="orcTradeTeresaRate" type="number" min="0" step="0.01"></label></div><div id="orcTradeTeresaInterest"></div></div>
         </div>
         <small>Estimativa de juros com base diária de 360 dias, saldo e TANB constantes. Não duplica os saldos já incluídos em Contas.</small>
       </div>
     </details>
-    <details class="ff-invest-section" id="ffCryptoPanel">
+    <details class="ff-invest-section" id="ffCryptoPanel" hidden>
       <summary><strong>Criptomoedas · Revolut</strong><span id="ffCryptoHeadline">Carteira</span></summary>
       <div class="ff-invest-inner">
         <p style="font-size:12px;color:#64748b">Cotação automática em EUR; podes alterar manualmente o preço por unidade se a API falhar.</p>
@@ -2042,10 +2058,10 @@ html[data-orc-theme="dark"] input,html[data-orc-theme="dark"] select,html[data-o
       <button class="orc-nav-btn" type="button" data-page="resumo" aria-label="Resumo"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Resumo</span></button>
       <button class="orc-nav-btn" type="button" data-page="rendimentos" aria-label="Rendimentos"><svg viewBox="0 0 24 24"><path d="M12 3v18M7 8c0-3 10-3 10 0s-10 3-10 7 10 3 10 0"/></svg><span>Rendimentos</span></button>
       <button class="orc-nav-btn" type="button" data-page="despesas" aria-label="Despesas"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v9h-9"/></svg><span>Despesas</span></button>
-      <button class="orc-nav-btn" type="button" data-page="planeamento" aria-label="Planeamento"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg><span>Planeamento</span></button>
-      <button class="orc-nav-btn" type="button" data-page="limpezas" aria-label="Serviço de Limpeza"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/><path d="M9 15l2 2 4-4"/></svg><span>Serviço de Limpeza</span></button>
-      <button class="orc-nav-btn" type="button" data-page="atividades" aria-label="Atividades"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><span>Atividades</span></button>
       <button class="orc-nav-btn" type="button" data-page="contas" aria-label="Contas"><svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3 20h18"/></svg><span>Contas</span></button>
+      <button class="orc-nav-btn" type="button" data-page="casa-santa-marta" aria-label="Casa Santa Marta"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Casa Santa Marta</span></button>
+      <button class="orc-nav-btn" type="button" data-page="casamento" aria-label="Casamento"><svg viewBox="0 0 24 24"><path d="M8 4h8l1 5-5 10-5-10 1-5z"/><path d="M9 9h6"/></svg><span>Casamento</span></button>
+      <button class="orc-nav-btn" type="button" data-page="planeamento" aria-label="Planeamento"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg><span>Planeamento</span></button>
       <button class="orc-nav-btn" type="button" data-page="investimentos" aria-label="Investimentos"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><span>Investimentos</span></button>
       <button class="orc-nav-btn" type="button" data-page="educacao" aria-label="Educação Financeira"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg><span>Educação Financeira</span></button>
       <button id="orcThemeToggle" class="orc-theme-toggle" type="button" aria-label="Alternar entre modo claro e escuro">☾ Modo escuro</button>
@@ -2252,7 +2268,7 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     };
     document.getElementById('ffInviteFromProfile').onclick=()=>{
       menu.hidden=true;
-      if(invite)prompt('Partilha este código apenas com a tua esposa:',invite);
+      if(invite)prompt('Partilha este código apenas com a tua parceira:',invite);
       else alert('Não foi possível obter o código de convite.');
     };
     document.getElementById('ffEditProfile').onclick=()=>{
@@ -2471,7 +2487,7 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
         id: 's' + Date.now() + '1', name: 'Trade Republic',
         subItems: [
           { id: 'tr' + Date.now() + '1', name: 'Trade da família', amount: Math.round(tr * 0.7) },
-          { id: 'tr' + Date.now() + '2', name: 'Trade da Teresa', amount: tr - Math.round(tr * 0.7) },
+          { id: 'tr' + Date.now() + '2', name: 'Trade pessoal', amount: tr - Math.round(tr * 0.7) },
         ]
       },
       { id: 's' + Date.now() + '2', name: 'Revolut', amount: rv },
@@ -2533,87 +2549,16 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
   }
 
   const defaultCategories = () => ([
-    {
-      id: 'c1', name: 'Habitação', budget: 0, spent: 0,
-      vendors: [
-        {
-          id: 'b1', name: 'Caixa Geral de Depósitos',
-          subItems: [
-            { id: 'bs1', name: 'Prestação', amount: 0 },
-            { id: 'bs2', name: 'Comissão', amount: 0 },
-          ]
-        },
-        { id: 'b2', name: 'Seguro de Vida', amount: 0 },
-      ]
-    },
-    { id: 'c9',  name: 'EDP', budget: 0, spent: 0, vendors: [] },
-    { id: 'c10', name: 'MEO', budget: 0, spent: 0, vendors: [] },
-    { id: 'c11', name: 'Água', budget: 0, spent: 0, vendors: [] },
-    { id: 'c12', name: 'S2A', budget: 0, spent: 0, vendors: [] },
-    {
-      id: 'c2', name: 'Alimentação', budget: 0, spent: 0,
-      vendors: [
-        { id: 'v1', name: 'Continente', amount: 0 },
-        { id: 'v2', name: 'Pingo Doce', amount: 0 },
-        { id: 'v3', name: 'Lidl', amount: 0 },
-        { id: 'v4', name: 'Mercadona', amount: 0 },
-        { id: 'v5', name: 'Auchan', amount: 0 },
-      ]
-    },
-    {
-      id: 'c3', name: 'Transporte', budget: 0, spent: 0,
-      vendors: [
-        { id: 't1', name: 'Passe mensal', amount: 0 },
-        { id: 't2', name: 'Combustível', amount: 0 },
-      ]
-    },
-    {
-      id: 'c4', name: 'Saúde', budget: 0, spent: 0,
-      vendors: [
-        { id: 'h1', name: 'CUF', amount: 0 },
-        { id: 'h2', name: 'Lusíadas', amount: 0 },
-      ]
-    },
     { id: 'c13', name: 'Outras Despesas', budget: 0, spent: 0, vendors: [], auto: 'other' },
-    {
-      id: 'c5', name: 'Extras', budget: 0, spent: 0, vendors: []
-    },
-    {
-      id: 'c6', name: 'Poupança', budget: 0, spent: 0,
-      vendors: [
-        {
-          id: 's1', name: 'Trade Republic',
-          subItems: [
-            { id: 'tr1', name: 'Trade da família', amount: 0 },
-            { id: 'tr2', name: 'Trade da Teresa', amount: 0 },
-          ]
-        },
-        { id: 's2', name: 'Revolut', amount: 0 },
-        {
-          id: 's3', name: 'XTB',
-          subItems: [
-            { id: 'x1', name: 'Ações', amount: 0 },
-            { id: 'x2', name: 'ETFs', amount: 0 },
-          ]
-        },
-      ]
-    },
   ]);
 
   const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-  const defaultAccounts = () => ([
-    {
-      id: 'acc3', name: 'Trade Republic',
-      subItems: [
-        { id: 'acc3s1', name: 'Trade da família', amount: 0 },
-        { id: 'acc3s2', name: 'Trade da Teresa', amount: 0 },
-      ]
-    },
-  ]);
+  const defaultAccounts = () => ([]);
 
   // preços de compra (moeda original) e preços atuais de referência (17 jul 2026)
   const defaultInvestments = () => ([]);
+  const defaultMonthlyInvestments = () => ({ etfContribution: 0, etfContributionDate: '', etfValue: 0, cryptoContribution: 0, cryptoContributionDate: '', cryptoBrokers: [] });
 
   let state = {
     monthIndex: new Date().getMonth(), // Mês atual no momento de abertura
@@ -2623,9 +2568,10 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     categories: defaultCategories(),
     accounts: defaultAccounts(),
     investments: defaultInvestments(),
+    monthlyInvestments: defaultMonthlyInvestments(),
     fxRate: 1, // Taxa neutra até configurar câmbio
     savingsGoal: 0,
-    cleaning: [],
+    cleaning: [], expenses: [],
     activitiesCfg: defaultActivities(),
     activityMonth: {},
     budgets: {}
@@ -2710,74 +2656,44 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
 
   function renderResumoCard() {
     const t = totals();
+    const period = financialPeriod();
+    const shortPt = date => date.toLocaleDateString('pt-PT', { day: '2-digit', month: 'short' });
     document.getElementById('orcResumoSub').textContent =
-      monthNames[state.monthIndex] + ' ' + state.year + ' · calculado a partir das folhas do mês';
+      'Período financeiro: ' + shortPt(period.start) + ' – ' + shortPt(period.end);
 
-    document.getElementById('orcResumoIncome').textContent = fmt(state.income);
+    const receivedIncome = round2((state.incomeEntries || [])
+      .filter(entry => entry.received)
+      .reduce((sum, entry) => sum + (Number(entry.amount) || 0), 0));
+    document.getElementById('orcResumoIncome').textContent = fmt(receivedIncome);
     document.getElementById('orcResumoExpenses').textContent = fmt(t.spent);
-    document.getElementById('orcResumoSaved').textContent = fmt(t.balance);
-
-    document.getElementById('orcResumoIncomeDelta').innerHTML =
-      resumoDeltaHtml(state.income, prevMonthData ? prevMonthData.income : null, true);
-    document.getElementById('orcResumoExpensesDelta').innerHTML =
-      resumoDeltaHtml(t.spent, prevMonthData ? prevMonthData.spent : null, false);
-    document.getElementById('orcResumoSavedDelta').innerHTML =
-      `<span class="orc-resumo-stat-delta neutral">${Math.round(t.saveRate * 100)}% do rendimento</span>`;
-
-    // despesas por categoria (barras)
-    const catList = state.categories.map(c => ({ name: c.name, value: categorySpent(c) })).filter(c => c.value > 0);
-    const maxCat = Math.max(1, ...catList.map(c => c.value));
-    const catRowsEl = document.getElementById('orcResumoCatRows');
-    catRowsEl.innerHTML = catList.length ? catList.map(c => `
-      <div class="orc-resumo-cat-row">
-        <span class="orc-resumo-cat-icon">${CATEGORY_EMOJI[c.name] || '•'}</span>
-        <span class="orc-resumo-cat-name">${c.name}</span>
-        <div class="orc-resumo-cat-track"><div class="orc-resumo-cat-fill" style="width:${(c.value / maxCat) * 100}%"></div></div>
-        <span class="orc-resumo-cat-amount">${fmt(c.value)}</span>
-      </div>
-    `).join('') : '<div class="orc-resumo-sub">Sem despesas este mês.</div>';
-
-    // meta de poupança — progresso = património atual (contas + investimentos) vs meta editável
-    const totalContas = round2((state.accounts || []).reduce((s, a) => s + accountBalance(a), 0));
-    const totalInvest = round2((state.investments || []).reduce((s, i) => s + investValueEur(i), 0));
-    const patrimonio = round2(totalContas + totalInvest);
-    const goal = Number(state.savingsGoal) || 1;
-    const pct = Math.max(0, Math.min(100, (patrimonio / goal) * 100));
-    const circumference = 2 * Math.PI * 49;
-    const arc = document.getElementById('orcResumoGoalArc');
-    arc.setAttribute('stroke-dasharray', circumference);
-    arc.setAttribute('stroke-dashoffset', circumference - (pct / 100) * circumference);
-    document.getElementById('orcResumoGoalPct').textContent = Math.round(pct) + '%';
-    document.getElementById('orcResumoGoalCaption').textContent = fmt(patrimonio) + ' / ' + fmt(goal);
-
-    // principais movimentos: rendimento + maiores despesas do mês
-    const vendorTx = [];
-    state.categories.forEach(cat => {
-      if (Array.isArray(cat.vendors) && cat.vendors.length) {
-        cat.vendors.forEach(v => vendorTx.push({ name: v.name, category: cat.name, amount: vendorAmount(v) }));
-      } else {
-        const amt = categorySpent(cat);
-        if (amt > 0) vendorTx.push({ name: cat.name, category: '', amount: amt });
-      }
-    });
-    vendorTx.sort((a, b) => b.amount - a.amount);
-    const topTx = vendorTx.slice(0, 3);
-    const txRowsEl = document.getElementById('orcResumoTxRows');
-    let txHtml = `
-      <div class="orc-resumo-tx-row">
-        <span class="orc-resumo-tx-dot" style="background:#2F8F5B"></span>
-        <span class="orc-resumo-tx-name">Rendimento<span class="orc-resumo-tx-tag">rendimento</span></span>
-        <span class="orc-resumo-tx-amount pos">+${fmt(state.income)}</span>
-      </div>
-    `;
-    txHtml += topTx.map(tx => `
-      <div class="orc-resumo-tx-row">
-        <span class="orc-resumo-tx-dot" style="background:#D97757"></span>
-        <span class="orc-resumo-tx-name">${tx.name}${tx.category ? `<span class="orc-resumo-tx-tag">${tx.category.toLowerCase()}</span>` : ''}</span>
-        <span class="orc-resumo-tx-amount neg">-${fmt(tx.amount)}</span>
-      </div>
-    `).join('');
-    txRowsEl.innerHTML = txHtml;
+    function renderAccountSummary(owner, titleId, accountsId, fallbackName) {
+      const personName = PEOPLE[owner === 'p1' ? 0 : 1] || fallbackName;
+      const accounts = accs(owner);
+      const total = round2(accounts.reduce((sum, account) => sum + accountBalance(account), 0));
+      document.getElementById(titleId).textContent = personName.toUpperCase() + ' · CONTAS';
+      document.getElementById(accountsId).innerHTML = accounts.length
+        ? accounts.map(account => `<div class="orc-resumo-tx-row"><span class="orc-resumo-tx-name">${esc(account.name || 'Conta')}</span><span class="orc-resumo-tx-amount pos">${fmt(accountBalance(account))}</span></div>`).join('') +
+          `<div class="orc-resumo-tx-row"><span class="orc-resumo-tx-name">Total</span><span class="orc-resumo-tx-amount pos">${fmt(total)}</span></div>`
+        : '<div class="orc-resumo-sub">Sem contas registadas.</div>';
+    }
+    renderAccountSummary('p1', 'orcResumoP1Title', 'orcResumoP1Accounts', 'Pessoa 1');
+    renderAccountSummary('p2', 'orcResumoP2Title', 'orcResumoP2Accounts', 'Pessoa 2');
+    const expenseCategories = ['Casa', 'Lazer', 'Carro'];
+    document.getElementById('orcResumoExpenseCategories').innerHTML = expenseCategories.map(category => {
+      const total = round2((state.expenses || [])
+        .filter(expense => (expense.category || 'Casa') === category)
+        .reduce((sum, expense) => sum + (Number(expense.amount) || 0), 0));
+      return `<div class="orc-resumo-tx-row"><span class="orc-resumo-tx-name">${category}</span><span class="orc-resumo-tx-amount neg">${fmt(total)}</span></div>`;
+    }).join('');
+    const allocationCategories = ['Poupança', 'Despesas pessoais/lazer', 'Investimentos', 'Conta conjunta'];
+    document.getElementById('orcResumoIncomeAllocations').innerHTML = allocationCategories.map(category => {
+      const total = round2((state.incomeEntries || [])
+        .filter(entry => entry.received)
+        .flatMap(entry => entry.allocations || [])
+        .filter(allocation => allocation.destination === category)
+        .reduce((sum, allocation) => sum + (Number(allocation.amount) || 0), 0));
+      return `<div class="orc-resumo-tx-row"><span class="orc-resumo-tx-name">${category}</span><span class="orc-resumo-tx-amount pos">${fmt(total)}</span></div>`;
+    }).join('');
   }
 
   async function loadYearHistoryAndRender() {
@@ -2893,7 +2809,7 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
 
   // ordem das categorias e migração de meses guardados com a estrutura antiga
   const CATEGORY_ORDER = ['Habitação', 'EDP', 'MEO', 'Água', 'S2A', 'Alimentação', 'Transporte', 'Saúde', 'Outras Despesas', 'Serviço de Limpeza', 'Atividades', 'Extras', 'Poupança'];
-  const BILL_DEFAULT_BUDGET = { 'EDP': 90, 'MEO': 55, 'Água': 25, 'S2A': 50 };
+  const BILL_DEFAULT_BUDGET = {};
 
   function normalizeCategories(categories) {
     let changed = false;
@@ -2942,6 +2858,45 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     return { categories: sorted, changed };
   }
 
+  let previousMonthlyInvestments = null;
+  let previousAccounts = null;
+  function cloneAccounts(accounts) {
+    return Array.isArray(accounts) ? JSON.parse(JSON.stringify(accounts)) : [];
+  }
+  function normalizeMonthlyInvestments(data, fallback) {
+    const base = fallback || defaultMonthlyInvestments();
+    const source = data && typeof data === 'object' ? data : {};
+    const fallbackBrokers = Array.isArray(base.cryptoBrokers) ? base.cryptoBrokers : [];
+    const sourceBrokers = Array.isArray(source.cryptoBrokers) ? source.cryptoBrokers : (Number(source.cryptoValue) ? [{ id: 'legacy-crypto', name: 'Cripto', value: Number(source.cryptoValue) || 0 }] : fallbackBrokers);
+    return {
+      etfContribution: Number(source.etfContribution) || 0,
+      etfContributionDate: /^\d{4}-\d{2}-\d{2}$/.test(source.etfContributionDate || '') ? source.etfContributionDate : '',
+      etfValue: Number.isFinite(Number(source.etfValue)) ? Number(source.etfValue) : (Number(base.etfValue) || 0),
+      cryptoContribution: Number(source.cryptoContribution) || 0,
+      cryptoContributionDate: /^\d{4}-\d{2}-\d{2}$/.test(source.cryptoContributionDate || '') ? source.cryptoContributionDate : '',
+      cryptoBrokers: sourceBrokers.map((broker, index) => ({ id: broker.id || 'crypto-' + index, name: broker.name || 'Corretora', value: Math.max(0, Number(broker.value) || 0) }))
+    };
+  }
+  async function readPreviousMonthlyInvestments() {
+    let month = state.monthIndex - 1, year = state.year;
+    if (month < 0) { month = 11; year--; }
+    try {
+      const saved = await store.get('orcamento-casa-v2:' + year + '-' + month);
+      if (!saved || !saved.value) return null;
+      const data = JSON.parse(saved.value);
+      return data.monthlyInvestments ? normalizeMonthlyInvestments(data.monthlyInvestments) : null;
+    } catch (e) { return null; }
+  }
+  async function readPreviousAccounts() {
+    let month = state.monthIndex - 1, year = state.year;
+    if (month < 0) { month = 11; year--; }
+    try {
+      const saved = await store.get('orcamento-casa-v2:' + year + '-' + month);
+      if (!saved || !saved.value) return null;
+      const data = JSON.parse(saved.value);
+      return Array.isArray(data.accounts) ? cloneAccounts(data.accounts) : null;
+    } catch (e) { return null; }
+  }
   async function loadMonth() {
     statusEl.textContent = 'a carregar…';
     expandedId = null;
@@ -2949,11 +2904,14 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     expandedVendorKey = null;
     if (typeof clearIncomeEditor === 'function') clearIncomeEditor();
     try {
+      previousMonthlyInvestments = await readPreviousMonthlyInvestments();
+      previousAccounts = await readPreviousAccounts();
       const res = await store.get(monthKey());
       if (res && res.value) {
         const data = JSON.parse(res.value);
         state.income = Number(data.income) || 0;
         state.incomeEntries = Array.isArray(data.incomeEntries) ? data.incomeEntries : [];
+        if (state.incomeEntries.length) recalcIncome();
         const migrated = normalizeCategories(Array.isArray(data.categories) ? data.categories : defaultCategories());
         state.categories = migrated.categories;
         state.categories.forEach(cat => {
@@ -2965,9 +2923,11 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
           }
         });
         state.cleaning = Array.isArray(data.cleaning) ? data.cleaning : [];
+        state.expenses = Array.isArray(data.expenses) ? data.expenses : [];
         state.activityMonth = (data.activityMonth && typeof data.activityMonth === 'object') ? data.activityMonth : {};
-        state.accounts = (Array.isArray(data.accounts) ? data.accounts : defaultAccounts()).filter(a => !['Caixa Geral de Depósitos', 'ActivoBank', 'Activo Bank'].includes(a.name));
+        state.accounts = (Array.isArray(data.accounts) ? data.accounts : (previousAccounts || defaultAccounts())).filter(a => !['Caixa Geral de Depósitos', 'ActivoBank', 'Activo Bank'].includes(a.name));
         state.investments = Array.isArray(data.investments) ? data.investments : defaultInvestments();
+        state.monthlyInvestments = normalizeMonthlyInvestments(data.monthlyInvestments, previousMonthlyInvestments || defaultMonthlyInvestments());
         // Recupera os valores originais apenas quando a carteira contém os cinco ativos padrão todos a zero.
         const originalPortfolio = defaultInvestments();
         if (state.investments.length === originalPortfolio.length &&
@@ -2982,10 +2942,11 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
         state.income = 0;
         state.incomeEntries = [];
         state.categories = defaultCategories();
-        state.cleaning = [];
+        state.cleaning = []; state.expenses = [];
         state.activityMonth = {};
-        state.accounts = defaultAccounts();
+        state.accounts = cloneAccounts(previousAccounts || defaultAccounts());
         state.investments = defaultInvestments();
+        state.monthlyInvestments = normalizeMonthlyInvestments(null, previousMonthlyInvestments || defaultMonthlyInvestments());
         state.fxRate = 0.874;
       }
       statusEl.textContent = savedText();
@@ -2993,10 +2954,11 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
       state.income = 0;
       state.incomeEntries = [];
       state.categories = defaultCategories();
-      state.cleaning = [];
+      state.cleaning = []; state.expenses = [];
       state.activityMonth = {};
-      state.accounts = defaultAccounts();
+      state.accounts = cloneAccounts(previousAccounts || defaultAccounts());
       state.investments = defaultInvestments();
+      state.monthlyInvestments = normalizeMonthlyInvestments(null, previousMonthlyInvestments || defaultMonthlyInvestments());
       state.fxRate = 0.874;
       statusEl.textContent = 'novo mês — ainda não guardado';
     }
@@ -3062,7 +3024,7 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
       syncAutoCategories();
       applyBudgets();
       try {
-        await store.set(monthKey(), JSON.stringify({ income: state.income, incomeEntries: state.incomeEntries, categories: state.categories, accounts: state.accounts, investments: state.investments, fxRate: state.fxRate, cleaning: state.cleaning, activityMonth: state.activityMonth }));
+        await store.set(monthKey(), JSON.stringify({ income: state.income, incomeEntries: state.incomeEntries, categories: state.categories, accounts: state.accounts, investments: state.investments, monthlyInvestments: state.monthlyInvestments, fxRate: state.fxRate, cleaning: state.cleaning, expenses: state.expenses, activityMonth: state.activityMonth }));
         statusEl.textContent = savedText();
       } catch (e) {
         statusEl.textContent = 'falha ao guardar — os dados ficam só nesta sessão';
@@ -3196,16 +3158,37 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     return round2(acc.balance);
   }
 
+  var PEOPLE = ['Pessoa 1', 'Pessoa 2'], peopleLoaded = false;
+  function accs(o) { return (state.accounts || []).filter(a => (a.owner || 'p1') === o); }
+  function paintPeople() { [1, 2].forEach(n => { const el = document.getElementById('orcPerson' + n); if (el) el.value = PEOPLE[n - 1]; }); }
+  async function loadPeople() {
+    if (peopleLoaded) return; peopleLoaded = true;
+    try { const r = await store.get('pessoas-v1'); if (r && r.value) { const p = JSON.parse(r.value); if (Array.isArray(p) && p.length === 2) PEOPLE = p; } } catch (e) {}
+    paintPeople();
+  }
   function renderAccounts() {
-    const el = document.getElementById('orcAccountsRows');
+    loadPeople();
+    renderAccountsInto(document.getElementById('orcAccP1'), 'p1');
+    renderAccountsInto(document.getElementById('orcAccP2'), 'p2');
+    const t1 = round2(accs('p1').reduce((s, a) => s + accountBalance(a), 0)), t2 = round2(accs('p2').reduce((s, a) => s + accountBalance(a), 0));
+    document.getElementById('orcAccCouple').textContent = 'total do casal: ' + fmt(round2(t1 + t2));
+  }
+  [1, 2].forEach(n => { const el = document.getElementById('orcPerson' + n); if (el) el.addEventListener('change', () => { PEOPLE[n - 1] = el.value.trim() || ('Pessoa ' + n); Promise.resolve(store.set('pessoas-v1', JSON.stringify(PEOPLE))).catch(() => {}); }); });
+  function renderAccountsInto(el, owner) {
     if (!state.accounts) state.accounts = [];
     el.innerHTML = '';
 
-    state.accounts.forEach(acc => {
+    accs(owner).forEach(acc => {
       const hasSub = Array.isArray(acc.subItems);
       const isOpen = expandedAccountId === acc.id;
       const balance = accountBalance(acc);
       const b = badgeFor(acc.name);
+      const previousAccount = (previousAccounts || []).find(account => account.id === acc.id);
+      const previousBalance = previousAccount ? accountBalance(previousAccount) : null;
+      const difference = previousBalance === null ? null : round2(balance - previousBalance);
+      const percentage = previousBalance > 0 && difference !== null ? (difference / previousBalance) * 100 : null;
+      const variationColor = difference === null || Math.abs(difference) < 0.005 ? 'var(--ink-soft)' : (difference > 0 ? 'var(--ok)' : 'var(--over)');
+      const variation = difference === null ? 'Sem registo anterior' : previousBalance === 0 ? 'Sem base para comparar' : `${difference >= 0 ? '▲' : '▼'} ${fmt(Math.abs(difference))} · ${difference >= 0 ? '+' : ''}${percentage.toFixed(1)}% vs período anterior`;
 
       const row = document.createElement('div');
       row.className = 'orc-account-row';
@@ -3217,7 +3200,7 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
         </div>
         <div></div>
         <input class="orc-account-balance" type="number" data-id="${acc.id}" value="${balance}" ${hasSub ? 'disabled title="soma dos subitens"' : ''} />
-        <div></div>
+        <div style="font-size:11px;color:${variationColor}">${variation}${hasSub ? '' : `<br><button class="orc-jump" type="button" style="margin-top:5px" data-account-split="${acc.id}">Dividir</button>`}</div>
         <button class="orc-del" data-account-id="${acc.id}" title="remover">×</button>
       `;
       el.appendChild(row);
@@ -3242,10 +3225,13 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
       }
     });
 
-    const total = round2(state.accounts.reduce((s, a) => s + accountBalance(a), 0));
+    const total = round2(accs(owner).reduce((s, a) => s + accountBalance(a), 0));
+    const previousTotal = previousAccounts ? round2(previousAccounts.filter(account => (account.owner || 'p1') === owner).reduce((sum, account) => sum + accountBalance(account), 0)) : null;
+    const totalDifference = previousTotal === null ? null : round2(total - previousTotal);
+    const totalPercentage = previousTotal > 0 && totalDifference !== null ? (totalDifference / previousTotal) * 100 : null;
     const totalEl = document.createElement('div');
     totalEl.className = 'orc-accounts-total';
-    totalEl.textContent = 'total nas contas: ' + fmt(total);
+    totalEl.textContent = 'total nas contas: ' + fmt(total) + (totalDifference === null ? '' : (previousTotal === 0 ? ' · sem base para comparar' : ` · ${totalDifference >= 0 ? '+' : '-'}${fmt(Math.abs(totalDifference))} (${totalDifference >= 0 ? '+' : ''}${totalPercentage.toFixed(1)}%) vs período anterior`));
     el.appendChild(totalEl);
 
     el.querySelectorAll('[data-account-toggle]').forEach(btn => {
@@ -3269,6 +3255,17 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
         const acc = state.accounts.find(a => a.id === e.target.dataset.id);
         if (!acc) return;
         acc.balance = Number(e.target.value) || 0;
+        renderAccounts();
+        scheduleSave();
+      });
+    });
+    el.querySelectorAll('[data-account-split]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const acc = state.accounts.find(a => a.id === e.currentTarget.dataset.accountSplit);
+        if (!acc) return;
+        acc.subItems = [{ id: 'accs' + Date.now(), name: 'Disponível', amount: accountBalance(acc) }];
+        delete acc.balance;
+        expandedAccountId = acc.id;
         renderAccounts();
         scheduleSave();
       });
@@ -3345,7 +3342,7 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     const interest=(balance,rate)=>{const daily=Math.max(0,Number(balance)||0)*Math.max(0,Number(rate)||0)/100/360;return 'Juros brutos estimados: '+fmt(daily*30)+' / 30 dias · '+fmt(daily*360)+' / 360 dias';};
     document.getElementById('orcTradeInterest').textContent=interest(f.balance,f.rate??2.5);
     document.getElementById('orcTradeTeresaInterest').textContent=interest(f.teresaBalance,f.teresaRate??2.5);
-    document.getElementById('ffTradeHeadline').textContent='Família: '+fmt(Number(f.balance)||0)+' · Teresa: '+fmt(Number(f.teresaBalance)||0);
+    document.getElementById('ffTradeHeadline').textContent='Família: '+fmt(Number(f.balance)||0)+' · Pessoa 2: '+fmt(Number(f.teresaBalance)||0);
   }
   const ffCryptoKey='ff-crypto-wallet-modelo-zero-v1';
   const ffCryptoDefaults=[];
@@ -3525,11 +3522,60 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     });
   }
 
+  function renderMonthlyInvestments() {
+    const root = document.getElementById('orcMonthlyInvestments');
+    if (!root) return;
+    state.monthlyInvestments = normalizeMonthlyInvestments(state.monthlyInvestments, previousMonthlyInvestments || defaultMonthlyInvestments());
+    const items = [
+      { title: 'ETF S&P 500', subtitle: 'Investimento do casal · XTB', contribution: 'etfContribution', contributionDate: 'etfContributionDate', value: 'etfValue' },
+      { title: 'Cripto', subtitle: 'Carteira de criptomoedas', contribution: 'cryptoContribution', contributionDate: 'cryptoContributionDate', value: 'cryptoValue', brokers: true }
+    ];
+    root.innerHTML = items.map(item => {
+      const value = item.brokers ? round2((state.monthlyInvestments.cryptoBrokers || []).reduce((sum, broker) => sum + (Number(broker.value) || 0), 0)) : (Number(state.monthlyInvestments[item.value]) || 0);
+      const contribution = Number(state.monthlyInvestments[item.contribution]) || 0;
+      const contributionDate = state.monthlyInvestments[item.contributionDate] || '';
+      const previousValue = previousMonthlyInvestments ? (item.brokers ? round2((previousMonthlyInvestments.cryptoBrokers || []).reduce((sum, broker) => sum + (Number(broker.value) || 0), 0)) : Number(previousMonthlyInvestments[item.value]) || 0) : null;
+      const difference = previousValue === null ? null : round2(value - previousValue);
+      const percentage = previousValue > 0 && difference !== null ? (difference / previousValue) * 100 : null;
+      const color = difference === null || Math.abs(difference) < 0.005 ? 'var(--ink-soft)' : (difference > 0 ? 'var(--ok)' : 'var(--over)');
+      const comparison = difference === null ? 'Sem registo no período anterior' : previousValue === 0 ? 'Sem base para comparar' : `${difference >= 0 ? '▲' : '▼'} ${fmt(Math.abs(difference))} · ${difference >= 0 ? '+' : ''}${percentage.toFixed(1)}% vs período anterior`;
+      const brokerRows = item.brokers ? (state.monthlyInvestments.cryptoBrokers || []).map(broker => `<div style="display:grid;grid-template-columns:minmax(0,1fr) 110px 30px;gap:7px;margin-top:7px"><input class="orc-cl-input" data-crypto-broker="name" data-broker-id="${broker.id}" value="${esc(broker.name)}"><input class="orc-cl-input" type="number" min="0" step="0.01" data-crypto-broker="value" data-broker-id="${broker.id}" value="${broker.value}"><button type="button" class="orc-del" data-crypto-broker-delete="${broker.id}">×</button></div>`).join('') + `<button type="button" class="orc-jump" style="margin-top:9px" data-crypto-broker-add>+ Adicionar corretora</button>` : `<label>Valor atual (€)<input type="number" min="0" step="0.01" data-monthly-investment="${item.value}" value="${value}"></label>`;
+      return `<div class="ff-trade-card"><h3>${item.title}</h3><p class="orc-hist-note" style="margin:0 0 14px">${item.subtitle}</p><div class="orc-finance-fields"><label>Data do reforço<input type="date" data-monthly-investment="${item.contributionDate}" value="${contributionDate}"></label><label>Reforço neste período (€)<input type="number" min="0" step="0.01" data-monthly-investment="${item.contribution}" value="${contribution}"></label>${brokerRows}</div><div style="font-size:13px;color:${color};margin-top:14px">Valor total: ${fmt(value)} · ${comparison}</div></div>`;
+    }).join('');
+    root.querySelectorAll('[data-monthly-investment]').forEach(input => {
+      input.addEventListener('change', event => {
+        const field = event.target.dataset.monthlyInvestment;
+        state.monthlyInvestments[field] = field.endsWith('Date') ? event.target.value : round2(Math.max(0, Number(event.target.value) || 0));
+        renderMonthlyInvestments();
+        scheduleSave();
+      });
+    });
+    root.querySelectorAll('[data-crypto-broker]').forEach(input => {
+      input.addEventListener('change', event => {
+        const broker = state.monthlyInvestments.cryptoBrokers.find(item => item.id === event.target.dataset.brokerId);
+        if (!broker) return;
+        broker[event.target.dataset.cryptoBroker] = event.target.dataset.cryptoBroker === 'value' ? round2(Math.max(0, Number(event.target.value) || 0)) : event.target.value;
+        renderMonthlyInvestments();
+        scheduleSave();
+      });
+    });
+    root.querySelector('[data-crypto-broker-add]')?.addEventListener('click', () => {
+      state.monthlyInvestments.cryptoBrokers.push({ id: uid('crypto-broker'), name: 'Nova corretora', value: 0 });
+      renderMonthlyInvestments();
+      scheduleSave();
+    });
+    root.querySelectorAll('[data-crypto-broker-delete]').forEach(button => button.addEventListener('click', event => {
+      state.monthlyInvestments.cryptoBrokers = state.monthlyInvestments.cryptoBrokers.filter(broker => broker.id !== event.currentTarget.dataset.cryptoBrokerDelete);
+      renderMonthlyInvestments();
+      scheduleSave();
+    }));
+  }
+
   // Regra configurável para o início do ciclo financeiro.
   const salaryRuleKey = 'familiar-finance-salary-rule-modelo-zero-v1';
   function getSalaryRule() {
-    try { return {...{mode:'fixed',day:21,weekend:'previous'}, ...JSON.parse(localStorage.getItem(salaryRuleKey)||'{}')}; }
-    catch (_) { return {mode:'fixed',day:21,weekend:'previous'}; }
+    try { return {...{mode:'last',day:28,weekend:'previous'}, ...JSON.parse(localStorage.getItem(salaryRuleKey)||'{}')}; }
+    catch (_) { return {mode:'last',day:28,weekend:'previous'}; }
   }
   function salaryCycleStart(year, monthIndex) {
     const rule = getSalaryRule();
@@ -3566,24 +3612,37 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
   }
   document.addEventListener('DOMContentLoaded', initSalaryRuleSettings);
 
+  function previousCalendarMonth(year, monthIndex) {
+    return monthIndex === 0 ? { year: year - 1, monthIndex: 11 } : { year, monthIndex: monthIndex - 1 };
+  }
+  function financialPeriod() {
+    const previous = previousCalendarMonth(state.year, state.monthIndex);
+    const start = salaryCycleStart(previous.year, previous.monthIndex);
+    const end = new Date(salaryCycleStart(state.year, state.monthIndex).getTime() - 86400000);
+    return { start, end };
+  }
+
   function render() {
     syncAutoCategories();
     applyBudgets();
-    const periodStart = salaryCycleStart(state.year, state.monthIndex);
-    const periodEnd = new Date(salaryCycleStart(state.year, state.monthIndex + 1).getTime() - 86400000);
+    const { start: periodStart, end: periodEnd } = financialPeriod();
     const shortPt = d => d.toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' });
-    document.getElementById('orcMonthLabel').textContent = monthNames[state.monthIndex] + ' ' + state.year + ' · ' + shortPt(periodStart) + ' – ' + shortPt(periodEnd);
+    document.getElementById('orcMonthLabel').textContent = 'Período ' + monthNames[state.monthIndex] + ' ' + state.year + ' · ' + shortPt(periodStart) + ' – ' + shortPt(periodEnd);
     document.getElementById('orcIncome').value = state.income;
 
+    syncAutoCategories();
     renderAccounts();
     renderInvestments();
+    renderMonthlyInvestments();
     renderResumoCard();
+    renderLedger();
     renderCleaning();
     renderActivities();
     renderIncomeEntries();
     renderPlans();
     renderBudgetPage();
-    renderBudgetCompare();
+    renderHouse();
+    renderWedding();
 
     const rowsEl = document.getElementById('orcRows');
     rowsEl.innerHTML = '';
@@ -3962,7 +4021,13 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
 
   document.getElementById('orcAddAccount').addEventListener('click', () => {
     if (!state.accounts) state.accounts = [];
-    state.accounts.push({ id: 'acc' + Date.now(), name: 'Nova conta', balance: 0 });
+    state.accounts.push({ id: 'acc' + Date.now(), name: 'Nova conta', balance: 0, owner: 'p1' });
+    renderAccounts();
+    scheduleSave();
+  });
+  document.getElementById('orcAddAccount2').addEventListener('click', () => {
+    if (!state.accounts) state.accounts = [];
+    state.accounts.push({ id: 'acc' + Date.now(), name: 'Nova conta', balance: 0, owner: 'p2' });
     renderAccounts();
     scheduleSave();
   });
@@ -4000,7 +4065,8 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
   document.getElementById('orcActPrevMonth').addEventListener('click', () => document.getElementById('orcPrev').click());
   document.getElementById('orcActNextMonth').addEventListener('click', () => document.getElementById('orcNext').click());
 
-  document.getElementById('orcResumoGoalInput').addEventListener('change', e => {
+  const resumoGoalInput = document.getElementById('orcResumoGoalInput');
+  if (resumoGoalInput) resumoGoalInput.addEventListener('change', e => {
     state.savingsGoal = Number(e.target.value) || 0;
     renderResumoCard();
     saveSavingsGoal();
@@ -4190,10 +4256,10 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
   const WEEKDAY_PLURAL = ['domingos', 'segundas-feiras', 'terças-feiras', 'quartas-feiras', 'quintas-feiras', 'sextas-feiras', 'sábados'];
   const ACT_COLORS = ['#3E7BFA', '#9B6FF0', '#33B9C7', '#F0973D', '#34C787', '#F1555C'];
   let activitiesCfgReady = false;
-  let selectedActPerson = 'David';
+  let selectedActPerson = 'Pessoa 1';
   let extraActivityPeople = [];
   let removedActivityPeople = [];
-  function activityPeople() { return [...new Set(['David', 'Rute', 'Teresa', ...extraActivityPeople, ...(state.activitiesCfg || []).map(a => a.person).filter(Boolean)])].filter(n => !removedActivityPeople.includes(n)); }
+  function activityPeople() { return [...new Set(['Pessoa 1', 'Pessoa 2', ...extraActivityPeople, ...(state.activitiesCfg || []).map(a => a.person).filter(Boolean)])].filter(n => !removedActivityPeople.includes(n)); }
   let selectedActId = null;
 
   function monthStr() { return state.year + '-' + pad2(state.monthIndex + 1); }
@@ -4218,10 +4284,50 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     return round2((state.cleaning || []).reduce((s, v) => s + cleaningTotal(v), 0));
   }
 
+
+  // --- Despesas por categoria ---
+  const LEDGER_CATEGORIES = ['Casa', 'Lazer', 'Carro'];
+  function ledgerTotal() { return round2((state.expenses || []).reduce((s, e) => s + (Number(e.amount) || 0), 0)); }
+  const ledEsc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  function renderLedger() {
+    const box = document.getElementById('ledCategories'); if (!box) return;
+    const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    const expenses = state.expenses = state.expenses || [];
+    box.innerHTML = LEDGER_CATEGORIES.map(category => {
+      const rows = expenses.filter(expense => (expense.category || 'Casa') === category)
+        .sort((a, b) => String(a.date).localeCompare(String(b.date)))
+        .map(expense => `<div class="orc-ledger-row"><input type="date" class="orc-cl-input" data-led="${expense.id}" data-f="date" value="${ledEsc(expense.date)}"><input class="orc-cl-input" data-led="${expense.id}" data-f="desc" value="${ledEsc(expense.desc)}" aria-label="Descrição em ${category}"><input type="number" step="0.01" class="orc-cl-input" data-led="${expense.id}" data-f="amount" value="${expense.amount}" aria-label="Valor em ${category}"><button class="orc-del" data-led-del="${expense.id}" title="Remover despesa">×</button></div>`).join('') || '<div class="orc-hist-note">Ainda sem despesas nesta categoria.</div>';
+      return `<section class="orc-ledger-category"><div class="orc-ledger-category-title">${category}</div><div class="orc-ledger-form"><input type="date" class="orc-cl-input" data-led-new-date="${category}" value="${today}"><input class="orc-cl-input" data-led-new-desc="${category}" placeholder="Descrição"><input type="number" step="0.01" class="orc-cl-input" data-led-new-amount="${category}" placeholder="Valor (€)"><button class="orc-add-row" data-led-add="${category}">+ Adicionar</button></div><div style="display:grid;gap:8px">${rows}</div></section>`;
+    }).join('');
+    document.getElementById('ledTotal').textContent = 'Total do mês: ' + fmt(ledgerTotal());
+  }
+  (function bindLedger() {
+    const page = document.getElementById('ledPage'); if (!page) return;
+    const commit = () => { syncAutoCategories(); scheduleSave(); render(); };
+    page.addEventListener('change', ev => {
+      const x = (state.expenses || []).find(v => v.id === ev.target.dataset.led); if (!x) return;
+      const f = ev.target.dataset.f; x[f] = f === 'amount' ? round2(Number(ev.target.value) || 0) : ev.target.value; commit();
+    });
+    page.addEventListener('click', ev => {
+      const category = ev.target.dataset.ledAdd;
+      if (category) {
+        const description = page.querySelector(`[data-led-new-desc="${category}"]`).value.trim();
+        const amount = Number(page.querySelector(`[data-led-new-amount="${category}"]`).value);
+        const date = page.querySelector(`[data-led-new-date="${category}"]`).value;
+        if (!description || !(amount > 0) || !date) return;
+        (state.expenses = state.expenses || []).push({ id: 'e' + Date.now(), category, date, desc: description, amount: round2(amount) });
+        commit();
+        return;
+      }
+      const id = ev.target.dataset.ledDel; if (!id) return;
+      state.expenses = state.expenses.filter(v => v.id !== id); commit();
+    });
+  })();
+
   // as categorias "Serviço de Limpeza" e "Atividades" são calculadas a partir das respetivas páginas
   function syncAutoCategories() {
     (state.categories || []).forEach(cat => {
-      if (cat.auto === 'other') cat.spent = round2(cleaningMonthTotal() + activitiesMonthTotal());
+      if (cat.auto === 'other') cat.spent = round2(ledgerTotal() + activitiesMonthTotal());
     });
   }
 
@@ -4633,11 +4739,54 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     });
   })();
 
+  // --- Casa Santa Marta e Casamento ---
+  const houseStoreKey = 'orcamento-casa-v2:house-santa-marta';
+  const weddingStoreKey = 'orcamento-casa-v2:wedding';
+  const defaultHouse = () => ({ details: [
+    { id: 'purchase', label: 'Valor de compra (€)', value: '' },
+    { id: 'loan', label: 'Valor do empréstimo (€)', value: '' },
+    { id: 'entry', label: 'Entrada (€)', value: '' },
+    { id: 'term', label: 'Prazo (anos)', value: '' },
+    { id: 'rate', label: 'Taxa (%)', value: '' }
+  ], rows: [] });
+  let houseData;
+  let weddingData;
+  function loadLocalData(key, fallback) { try { const data = JSON.parse(localStorage.getItem(key) || 'null'); return data && typeof data === 'object' ? data : fallback(); } catch (e) { return fallback(); } }
+  function saveLocalData(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {} }
+  function houseDifference(row) { return round2((Number(row.rent) || 0) - (Number(row.payment) || 0) - (Number(row.insurance) || 0)); }
+  function renderHouse() {
+    houseData = houseData || loadLocalData(houseStoreKey, defaultHouse);
+    houseData.details = Array.isArray(houseData.details) ? houseData.details : defaultHouse().details;
+    houseData.rows = Array.isArray(houseData.rows) ? houseData.rows : [];
+    document.getElementById('houseDetails').innerHTML = houseData.details.map(detail => `<div class="orc-cl-stat"><input class="orc-cl-input" data-house-detail="label" data-id="${detail.id}" value="${esc(detail.label)}"><input class="orc-cl-input" data-house-detail="value" data-id="${detail.id}" type="number" step="0.01" value="${detail.value}"><button type="button" class="orc-del" data-house-detail-delete="${detail.id}" title="Remover dado">×</button></div>`).join('');
+    document.getElementById('houseRows').innerHTML = houseData.rows.map(row => `<div class="orc-row" style="min-width:650px"><input class="orc-cl-input" data-house-row="month" data-id="${row.id}" type="month" value="${esc(row.month || '')}"><input class="orc-cl-input" data-house-row="rent" data-id="${row.id}" type="number" min="0" step="0.01" value="${Number(row.rent) || 0}"><input class="orc-cl-input" data-house-row="payment" data-id="${row.id}" type="number" min="0" step="0.01" value="${Number(row.payment) || 0}"><input class="orc-cl-input" data-house-row="insurance" data-id="${row.id}" type="number" min="0" step="0.01" value="${Number(row.insurance) || 0}"><div class="orc-card-value" style="color:${houseDifference(row) >= 0 ? 'var(--ok)' : 'var(--over)'}">${fmt(houseDifference(row))}</div><button type="button" class="orc-del" data-house-row-delete="${row.id}">×</button></div>`).join('') || '<div class="orc-hist-note" style="padding:14px">Ainda não há meses registados.</div>';
+    const total = round2(houseData.rows.reduce((sum, row) => sum + houseDifference(row), 0));
+    document.getElementById('houseDifferenceTotal').textContent = 'Total acumulado da diferença: ' + fmt(total);
+  }
+  function renderWedding() {
+    weddingData = weddingData || loadLocalData(weddingStoreKey, () => ({ rows: [] }));
+    weddingData.rows = Array.isArray(weddingData.rows) ? weddingData.rows : [];
+    const totals = weddingData.rows.reduce((sum, row) => { sum.total += Number(row.total) || 0; sum.paid += Number(row.paid) || 0; return sum; }, { total: 0, paid: 0 });
+    const pending = round2(totals.total - totals.paid);
+    document.getElementById('weddingSummary').innerHTML = `<div class="orc-cl-stat"><div class="orc-cl-stat-label">Total previsto</div><div class="orc-cl-stat-value">${fmt(totals.total)}</div></div><div class="orc-cl-stat"><div class="orc-cl-stat-label">Já pago</div><div class="orc-cl-stat-value">${fmt(totals.paid)}</div></div><div class="orc-cl-stat"><div class="orc-cl-stat-label">Por pagar</div><div class="orc-cl-stat-value">${fmt(pending)}</div></div>`;
+    document.getElementById('weddingRows').innerHTML = weddingData.rows.map(row => { const remaining = round2((Number(row.total) || 0) - (Number(row.paid) || 0)); const status = remaining <= 0 && Number(row.total) > 0 ? 'Pago' : (Number(row.paid) > 0 ? 'Parcial' : 'Por pagar'); return `<div class="orc-row" style="min-width:700px"><input class="orc-cl-input" data-wedding-row="description" data-id="${row.id}" value="${esc(row.description || '')}" placeholder="Ex.: Quinta, fotógrafo"><input class="orc-cl-input" data-wedding-row="total" data-id="${row.id}" type="number" min="0" step="0.01" value="${Number(row.total) || 0}"><input class="orc-cl-input" data-wedding-row="paid" data-id="${row.id}" type="number" min="0" step="0.01" value="${Number(row.paid) || 0}"><div class="orc-card-value" style="color:${remaining > 0 ? 'var(--accent-orange)' : 'var(--ok)'}">${fmt(remaining)}</div><div class="orc-hist-note">${status}</div><button type="button" class="orc-del" data-wedding-row-delete="${row.id}">×</button></div>`; }).join('') || '<div class="orc-hist-note" style="padding:14px">Ainda não há despesas registadas.</div>';
+  }
+  document.getElementById('houseAddDetail').addEventListener('click', () => { houseData = houseData || loadLocalData(houseStoreKey, defaultHouse); houseData.details.push({ id: uid('house-detail'), label: 'Novo dado', value: '' }); saveLocalData(houseStoreKey, houseData); renderHouse(); });
+  document.getElementById('houseAddRow').addEventListener('click', () => { houseData = houseData || loadLocalData(houseStoreKey, defaultHouse); houseData.rows.push({ id: uid('house-row'), month: '', rent: 0, payment: 0, insurance: 0 }); saveLocalData(houseStoreKey, houseData); renderHouse(); });
+  document.getElementById('houseDetails').addEventListener('change', event => { const field = event.target.dataset.houseDetail; if (!field) return; const detail = houseData.details.find(item => item.id === event.target.dataset.id); if (!detail) return; detail[field] = field === 'value' ? Number(event.target.value) || 0 : event.target.value; saveLocalData(houseStoreKey, houseData); });
+  document.getElementById('houseDetails').addEventListener('click', event => { const id = event.target.dataset.houseDetailDelete; if (!id) return; houseData.details = houseData.details.filter(item => item.id !== id); saveLocalData(houseStoreKey, houseData); renderHouse(); });
+  document.getElementById('houseRows').addEventListener('change', event => { const field = event.target.dataset.houseRow; if (!field) return; const row = houseData.rows.find(item => item.id === event.target.dataset.id); if (!row) return; row[field] = field === 'month' ? event.target.value : Number(event.target.value) || 0; saveLocalData(houseStoreKey, houseData); renderHouse(); });
+  document.getElementById('houseRows').addEventListener('click', event => { const id = event.target.dataset.houseRowDelete; if (!id) return; houseData.rows = houseData.rows.filter(item => item.id !== id); saveLocalData(houseStoreKey, houseData); renderHouse(); });
+  document.getElementById('weddingAddRow').addEventListener('click', () => { weddingData = weddingData || loadLocalData(weddingStoreKey, () => ({ rows: [] })); weddingData.rows.push({ id: uid('wedding-row'), description: '', total: 0, paid: 0 }); saveLocalData(weddingStoreKey, weddingData); renderWedding(); });
+  document.getElementById('weddingRows').addEventListener('change', event => { const field = event.target.dataset.weddingRow; if (!field) return; const row = weddingData.rows.find(item => item.id === event.target.dataset.id); if (!row) return; row[field] = field === 'description' ? event.target.value : Number(event.target.value) || 0; saveLocalData(weddingStoreKey, weddingData); renderWedding(); });
+  document.getElementById('weddingRows').addEventListener('click', event => { const id = event.target.dataset.weddingRowDelete; if (!id) return; weddingData.rows = weddingData.rows.filter(item => item.id !== id); saveLocalData(weddingStoreKey, weddingData); renderWedding(); });
+
   // --- Calendário de rendimentos ---
   let selectedIncomeDate = null;
   let editingIncomeId = null;
   function incomeDateFor(d) {
-    return state.year + '-' + String(state.monthIndex + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+    const receiptMonth = previousCalendarMonth(state.year, state.monthIndex);
+    return receiptMonth.year + '-' + String(receiptMonth.monthIndex + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
   }
   // Planeamento global. Cada compra tem um ID único e é materializada uma única vez
   // como linha de Despesas do mês correspondente (categoria Extras).
@@ -4664,8 +4813,8 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     const [year,month]=date.split('-').map(Number),key='orcamento-casa-v2:'+year+'-'+(month-1);
     const current=year===state.year&&month-1===state.monthIndex;
     let data;
-    if(current){data={income:state.income,incomeEntries:state.incomeEntries,categories:state.categories,accounts:state.accounts,investments:state.investments,fxRate:state.fxRate,cleaning:state.cleaning,activityMonth:state.activityMonth};}
-    else{const raw=await store.get(key);data=raw&&raw.value?JSON.parse(raw.value):{income:0,incomeEntries:[],categories:defaultCategories(),accounts:defaultAccounts(),investments:defaultInvestments(),fxRate:state.fxRate,cleaning:[],activityMonth:{}};}
+    if(current){data={income:state.income,incomeEntries:state.incomeEntries,categories:state.categories,accounts:state.accounts,investments:state.investments,monthlyInvestments:state.monthlyInvestments,fxRate:state.fxRate,cleaning:state.cleaning,activityMonth:state.activityMonth};}
+    else{const raw=await store.get(key);data=raw&&raw.value?JSON.parse(raw.value):{income:0,incomeEntries:[],categories:defaultCategories(),accounts:defaultAccounts(),investments:defaultInvestments(),monthlyInvestments:defaultMonthlyInvestments(),fxRate:state.fxRate,cleaning:[],activityMonth:{}};}
     let extras=(data.categories||[]).find(c=>c.name==='Extras'||c.name==='Lazer');
     if(!extras){extras={id:uid('c'),name:'Extras',budget:0,spent:0,vendors:[]};data.categories.push(extras);}
     if(!Array.isArray(extras.vendors))extras.vendors=[];
@@ -4762,12 +4911,36 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     await savePlans();renderPlans();
   });
 
+  function incomeDestinations() {
+    return ['Poupança', 'Despesas pessoais/lazer', 'Investimentos', 'Conta conjunta'];
+  }
+  function incomeAllocationTotal(entry) {
+    return round2((entry.allocations || []).reduce((sum, allocation) => sum + (Number(allocation.amount) || 0), 0));
+  }
+  function incomeAllocationEditor(entry) {
+    const allocations = Array.isArray(entry.allocations) ? entry.allocations : [];
+    const distributed = incomeAllocationTotal(entry);
+    const remaining = round2((Number(entry.amount) || 0) - distributed);
+    const destinations = incomeDestinations();
+    const rows = allocations.map(allocation => {
+      const allocationPercentage = (Number(entry.amount) || 0) > 0 ? ((Number(allocation.amount) || 0) / Number(entry.amount)) * 100 : 0;
+      const options = destinations.map(destination => `<option value="${esc(destination)}" ${allocation.destination === destination ? 'selected' : ''}>${esc(destination)}</option>`).join('');
+      const missingOption = allocation.destination && !destinations.includes(allocation.destination)
+        ? `<option value="${esc(allocation.destination)}" selected>${esc(allocation.destination)}</option>` : '';
+      return `<div style="display:grid;grid-template-columns:minmax(0,1fr) 100px 30px;gap:8px;margin-top:8px;align-items:center"><select class="orc-cl-input" data-income-allocation="destination" data-income-id="${entry.id}" data-allocation-id="${allocation.id}">${missingOption}${options}</select><div><input type="number" min="0" step="0.01" class="orc-cl-input" value="${Number(allocation.amount) || 0}" data-income-allocation="amount" data-income-id="${entry.id}" data-allocation-id="${allocation.id}"><small class="orc-hist-note">${allocationPercentage.toFixed(1)}% do rendimento</small></div><button type="button" class="orc-del" data-income-allocation-delete="${entry.id}|${allocation.id}" title="Remover destino">×</button></div>`;
+    }).join('');
+    const remainingColor = Math.abs(remaining) < 0.005 ? 'var(--ok)' : (remaining < 0 ? 'var(--over)' : 'var(--accent-orange)');
+    return `<div style="width:100%;border-top:1px solid var(--rule);padding-top:12px;margin-top:2px"><div class="orc-hist-note">Distribuído: <b>${fmt(distributed)}</b> · <span style="color:${remainingColor}">Por atribuir: ${fmt(remaining)}</span></div>${rows}<button type="button" class="orc-jump" style="margin-top:10px" data-income-allocation-add="${entry.id}">+ Adicionar destino</button></div>`;
+  }
   function renderIncomeEntries() {
     const entries = Array.isArray(state.incomeEntries) ? state.incomeEntries : [];
-    const y = state.year, m = state.monthIndex;
+    const receiptMonth = previousCalendarMonth(state.year, state.monthIndex);
+    const y = receiptMonth.year, m = receiptMonth.monthIndex;
     if (!selectedIncomeDate || !selectedIncomeDate.startsWith(y + '-' + String(m + 1).padStart(2, '0') + '-')) selectedIncomeDate = incomeDateFor(1);
     if (!editingIncomeId) document.getElementById('orcIncomeDate').value = selectedIncomeDate;
-    document.getElementById('orcIncomeCalTitle').textContent = monthNames[m] + ' ' + y;
+    document.getElementById('orcIncomeCalTitle').textContent = 'Recebimentos de ' + monthNames[m] + ' ' + y;
+    document.getElementById('orcIncomeCalHint').textContent = 'financiam ' + monthNames[state.monthIndex] + ' ' + state.year;
+    document.getElementById('orcIncomePeriodNote').textContent = 'Os rendimentos recebidos em ' + monthNames[m] + ' ' + y + ' financiam o período de ' + monthNames[state.monthIndex] + ' ' + state.year + '.';
     const first = (new Date(y, m, 1).getDay() + 6) % 7;
     const count = new Date(y, m + 1, 0).getDate();
     let html = '<div></div>'.repeat(first);
@@ -4779,10 +4952,10 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     document.getElementById('orcIncomeCalGrid').innerHTML = html;
     const total = entries.reduce((a,e) => a + (Number(e.amount) || 0),0);
     const received = entries.filter(e => e.received).reduce((a,e) => a + (Number(e.amount) || 0),0);
-    document.getElementById('orcIncomeSummary').innerHTML = '<div class="orc-cl-stat"><div class="orc-cl-stat-label">Total registado</div><div class="orc-cl-stat-value">' + fmt(total) + '</div></div><div class="orc-cl-stat"><div class="orc-cl-stat-label">Recebido</div><div class="orc-cl-stat-value">' + fmt(received) + '</div></div><div class="orc-cl-stat"><div class="orc-cl-stat-label">Pendente</div><div class="orc-cl-stat-value">' + fmt(total-received) + '</div></div>' + (!entries.length && state.income ? '<div class="orc-cl-stat"><div class="orc-cl-stat-label">Rendimento anterior</div><div class="orc-cl-stat-value">' + fmt(state.income) + '</div></div>' : '');
+    document.getElementById('orcIncomeSummary').innerHTML = '<div class="orc-cl-stat"><div class="orc-cl-stat-label">Total para ' + monthNames[state.monthIndex] + '</div><div class="orc-cl-stat-value">' + fmt(total) + '</div></div><div class="orc-cl-stat"><div class="orc-cl-stat-label">Recebido</div><div class="orc-cl-stat-value">' + fmt(received) + '</div></div><div class="orc-cl-stat"><div class="orc-cl-stat-label">Pendente</div><div class="orc-cl-stat-value">' + fmt(total-received) + '</div></div>' + (!entries.length && state.income ? '<div class="orc-cl-stat"><div class="orc-cl-stat-label">Rendimento anterior</div><div class="orc-cl-stat-value">' + fmt(state.income) + '</div></div>' : '');
     document.getElementById('orcIncomeAdd').textContent = editingIncomeId ? 'Guardar alterações' : '+ Adicionar';
     document.getElementById('orcIncomeCancelEdit').hidden = !editingIncomeId;
-    document.getElementById('orcIncomeList').innerHTML = entries.length ? [...entries].sort((a,b)=>a.date.localeCompare(b.date)).map(e => '<div class="orc-cl-card" style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap"><div><b>' + esc(e.person || 'Sem nome') + '</b> · ' + esc(e.type || 'Outro') + '<div class="orc-hist-note">' + esc(e.date) + ' · ' + fmt(Number(e.amount)||0) + '</div></div><div style="display:flex;gap:8px;align-items:center"><label><input type="checkbox" data-income-toggle="' + e.id + '" ' + (e.received ? 'checked' : '') + '> Recebido</label><button type="button" class="orc-jump" data-income-edit="' + e.id + '">Editar</button><button type="button" class="orc-jump" data-income-delete="' + e.id + '">Eliminar</button></div></div>').join('') : '<div class="orc-hist-note">Ainda não há recebimentos registados neste mês.</div>';
+    document.getElementById('orcIncomeList').innerHTML = entries.length ? [...entries].sort((a,b)=>a.date.localeCompare(b.date)).map(e => '<div class="orc-cl-card" style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap"><div><b>' + esc(e.person || 'Sem nome') + '</b> · ' + esc(e.type || 'Outro') + '<div class="orc-hist-note">Recebido em ' + esc(e.date) + ' · financia ' + monthNames[state.monthIndex] + ' ' + state.year + ' · ' + fmt(Number(e.amount)||0) + '</div></div><div style="display:flex;gap:8px;align-items:center"><label><input type="checkbox" data-income-toggle="' + e.id + '" ' + (e.received ? 'checked' : '') + '> Recebido</label><button type="button" class="orc-jump" data-income-edit="' + e.id + '">Editar</button><button type="button" class="orc-jump" data-income-delete="' + e.id + '">Eliminar</button></div>' + incomeAllocationEditor(e) + '</div>').join('') : '<div class="orc-hist-note">Ainda não há rendimentos registados para este período.</div>';
   }
   document.getElementById('orcIncomeCalGrid').addEventListener('click', e => {
     const btn = e.target.closest('[data-income-day]'); if (!btn) return;
@@ -4803,7 +4976,9 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     document.getElementById('orcIncomeCancelEdit').hidden = true;
   }
   function recalcIncome() {
-    state.income = round2((state.incomeEntries || []).reduce((sum, item) => sum + (Number(item.amount) || 0), 0));
+    const entries = state.incomeEntries || [];
+    if (!entries.length) return;
+    state.income = round2(entries.filter(item => item.received).reduce((sum, item) => sum + (Number(item.amount) || 0), 0));
   }
   document.getElementById('orcIncomeCancelEdit').addEventListener('click', () => {
     clearIncomeEditor(); render();
@@ -4811,8 +4986,9 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
   document.getElementById('orcIncomeAdd').addEventListener('click', () => {
     const date = document.getElementById('orcIncomeDate').value;
     const amount = Number(String(document.getElementById('orcIncomeAmount').value).replace(',', '.'));
-    if (!date || !date.startsWith(state.year + '-' + String(state.monthIndex + 1).padStart(2, '0') + '-') || !(amount > 0)) {
-      alert('Seleciona uma data do mês em vista e um valor superior a zero.'); return;
+    const receiptMonth = previousCalendarMonth(state.year, state.monthIndex);
+    if (!date || !date.startsWith(receiptMonth.year + '-' + String(receiptMonth.monthIndex + 1).padStart(2, '0') + '-') || !(amount > 0)) {
+      alert('Seleciona uma data do mês de recebimento e um valor superior a zero.'); return;
     }
     if (!Array.isArray(state.incomeEntries)) state.incomeEntries = [];
     const entryData = {
@@ -4860,7 +5036,37 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
   document.getElementById('orcIncomeList').addEventListener('change', e => {
     const id=e.target.dataset.incomeToggle; if(!id)return;
     const entry=state.incomeEntries.find(x=>x.id===id); if(!entry)return;
-    entry.received=e.target.checked; renderIncomeEntries(); scheduleSave();
+    entry.received=e.target.checked; recalcIncome(); render(); scheduleSave();
+  });
+  document.getElementById('orcIncomeList').addEventListener('click', e => {
+    const addButton = e.target.closest('[data-income-allocation-add]');
+    if (addButton) {
+      const entry = (state.incomeEntries || []).find(item => item.id === addButton.dataset.incomeAllocationAdd);
+      if (!entry) return;
+      if (!Array.isArray(entry.allocations)) entry.allocations = [];
+      entry.allocations.push({ id: uid('allocation'), destination: 'Poupança', amount: 0 });
+      renderIncomeEntries();
+      scheduleSave();
+      return;
+    }
+    const deleteButton = e.target.closest('[data-income-allocation-delete]');
+    if (!deleteButton) return;
+    const [entryId, allocationId] = deleteButton.dataset.incomeAllocationDelete.split('|');
+    const entry = (state.incomeEntries || []).find(item => item.id === entryId);
+    if (!entry || !Array.isArray(entry.allocations)) return;
+    entry.allocations = entry.allocations.filter(allocation => allocation.id !== allocationId);
+    renderIncomeEntries();
+    scheduleSave();
+  });
+  document.getElementById('orcIncomeList').addEventListener('change', e => {
+    const field = e.target.dataset.incomeAllocation;
+    if (!field) return;
+    const entry = (state.incomeEntries || []).find(item => item.id === e.target.dataset.incomeId);
+    const allocation = entry && (entry.allocations || []).find(item => item.id === e.target.dataset.allocationId);
+    if (!allocation) return;
+    allocation[field] = field === 'amount' ? round2(Math.max(0, Number(e.target.value) || 0)) : e.target.value;
+    renderIncomeEntries();
+    scheduleSave();
   });
 
   // --- Menu / páginas ---
@@ -4868,9 +5074,10 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
     resumo: 'Resumo',
     despesas: 'Despesas',
     rendimentos: 'Rendimentos',
+    'casa-santa-marta': 'Casa Santa Marta',
+    casamento: 'Casamento',
     planeamento: 'Planeamento',
     limpezas: 'Serviço de Limpeza',
-    atividades: 'Atividades',
     contas: 'Contas',
     investimentos: 'Investimentos',
     educacao: 'Educação Financeira'
