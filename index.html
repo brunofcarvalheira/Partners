@@ -5187,9 +5187,22 @@ window.FAMILIAR_SUPABASE_ANON_KEY = 'sb_publishable_3wfZRX-N8PL_PtO8y2OSRA_tepmX
   });
 
   // Só iniciar a aplicação depois de confirmar sessão e família.
+  function openCurrentFinancialPeriod() {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const receiptDate = salaryCycleStart(now.getFullYear(), now.getMonth());
+    state.year = now.getFullYear();
+    state.monthIndex = now.getMonth();
+    if (today >= receiptDate) {
+      state.monthIndex++;
+      if (state.monthIndex > 11) { state.monthIndex = 0; state.year++; }
+    }
+  }
+
   (async()=>{
     try {
       if(!(await ffReady()))return;
+      openCurrentFinancialPeriod();
       await Promise.all([loadMonth(),loadSavingsGoal(),loadActivitiesCfg(),loadBudgets()]);
       // Atualização periódica para refletir alterações feitas noutro dispositivo.
       setInterval(async()=>{
